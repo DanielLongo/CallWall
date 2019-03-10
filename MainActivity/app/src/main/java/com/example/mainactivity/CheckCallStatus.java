@@ -1,6 +1,11 @@
 package com.example.mainactivity;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import org.apache.commons.io.IOUtils;
 
@@ -12,10 +17,13 @@ import java.net.URLConnection;
 
 public class CheckCallStatus {
     private static String body;
+    static private HtmlPage page;
 
     static class MyDownloadTask extends AsyncTask<Void,Void,Void>
     {
         public String turl;
+        public String turl2;
+        public HtmlPage tpage;
         protected void onPreExecute() {
             //display progress dialog.
 
@@ -46,7 +54,18 @@ public class CheckCallStatus {
             try {
                 turl = IOUtils.toString(in, encoding);
             } catch (IOException e) {
+                turl = "true";
                 e.printStackTrace();
+            }
+
+            WebClient client = new WebClient();
+            client.setJavaScriptEnabled (false);
+            client.setCssEnabled (false);
+            try {
+                tpage = client.getPage(turl2);
+            } catch (Exception e) {
+                //e.printStackTrace();
+                tpage = null;
             }
             return null;
         }
@@ -54,6 +73,10 @@ public class CheckCallStatus {
         protected void onPostExecute(Void result) {
             // dismiss progress dialog and update ui
         }
+    }
+
+    public static String generateURL(String phoneNumber) {
+        return "https://who-calledme.com/Number/" +  phoneNumber.substring (0,1) + "-" + phoneNumber.substring (1,4) + "-" + phoneNumber.substring (4,7) + "-" + phoneNumber.substring (7,11);
     }
 
     public static boolean checkCallStatus(String phoneNum) {
@@ -67,14 +90,30 @@ public class CheckCallStatus {
             encoding = encoding == null ? "UTF-8" : encoding;*/
         MyDownloadTask task = new MyDownloadTask();
         task.turl = "https://dlongo.pythonanywhere.com/?phone_number=+" + phoneNum;
+        task.turl2 = generateURL(phoneNum);
+        page = task.tpage;
         task.execute();
         try {
-            Thread.sleep(10000);
+            Thread.sleep(12000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        boolean a = false;
+        boolean b = false;
         body = task.turl;//IOUtils.toString(in, encoding);
-        if (body.equals("False")) return false;
-        return true;
+        if (body.equals("False")) a = false;
+        else a = true;
+        try {
+            HtmlElement spanPrice = ((HtmlElement) page.getFirstByXPath("//*[@id=\"NNForm\"]/div[4]/div[1]/div/div/div/div[2]/div[1]/div[2]"));
+            String rating = spanPrice.asText();
+            if (rating.equals("Dangerous")) b = false;
+            else if (rating.equals("Harassing")) b = false;
+            else b = true;
+        } catch(Exception e) {
+            b = true;
+        }
+        Log.v("a", ""+a);
+        Log.v("b", ""+b);
+        return a && b;
     }
 }
