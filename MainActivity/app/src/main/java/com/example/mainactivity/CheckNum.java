@@ -3,9 +3,14 @@ package com.example.mainactivity;
 import android.util.Log;
 
 public class CheckNum {
-    public static boolean checkNum(String number) {
-        Log.v("2", ""+CheckCallStatus.checkCallStatus (number));
-        if (CheckPhoneNum.checkPhoneNum (number) && CheckCallStatus.checkCallStatus (number)) return true;
+    public static boolean checkNum(String number1) {
+        String number = "16505461126";
+        //
+        boolean b = CheckCallStatus.checkCallStatus (number);
+        boolean a = CheckPhoneNum.checkPhoneNum (number);
+        Log.v("1", ""+a);
+        Log.v("2", ""+b);
+        if (a && b) return true;
         return false;
     }
 
