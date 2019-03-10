@@ -39,7 +39,7 @@ public class CheckPhoneNum {
     }
 
     public static String generateURL(String phoneNumber) {
-        return "https://ho-calledme.com/Number/" +  phoneNumber.substring (0,1) + "-" + phoneNumber.substring (1,4) + "-" + phoneNumber.substring (4,7) + "-" + phoneNumber.substring (7,11);
+        return "https://who-calledme.com/Number/" +  phoneNumber.substring (0,1) + "-" + phoneNumber.substring (1,4) + "-" + phoneNumber.substring (4,7) + "-" + phoneNumber.substring (7,11);
 
     }
 

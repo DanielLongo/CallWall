@@ -7,10 +7,10 @@ public class CheckNum {
         String number = "16505461126";
         //
         boolean b = CheckCallStatus.checkCallStatus (number);
-        boolean a = CheckPhoneNum.checkPhoneNum (number);
-        Log.v("1", ""+a);
+        //boolean a = CheckPhoneNum.checkPhoneNum (number);
+        //Log.v("1", ""+a);
         Log.v("2", ""+b);
-        if (a && b) return true;
+        if (true && b) return true;
         return false;
     }
 

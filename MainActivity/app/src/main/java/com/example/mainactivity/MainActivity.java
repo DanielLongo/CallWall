@@ -2,6 +2,7 @@ package com.example.mainactivity;
 
 import android.Manifest;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +15,9 @@ import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -22,15 +25,46 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_READ_PHONE_STATE = 1;
     public static int lastRingerMode = 0;
     public static ArrayList<String> numbers;
+    public static boolean on = true;
+    public static int verified = 0;
+    public void updateTextView(final String s) {
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView tv= (TextView) findViewById(R.id.verified);
+                tv.setText(""+s);
+            }
+        });
+    }
+
+    public void Toggle(View view) {
+        on = !on;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         IncomingCallReceiver.thisActivity = MainActivity.this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        class VerifiedCounter extends BroadcastReceiver {
+            @Override
+            public void onReceive(final Context context, Intent intent) {
+                if (!MainActivity.on) {
+                    return;
+                }
+                Log.v("test", ""+MainActivity.verified);
+                updateTextView(MainActivity.verified+"");
+            }
+        }
+
+        new VerifiedCounter();
+
+
+
         final Context context = this.getApplicationContext();
 
-        Toast.makeText(this, "Started the app", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Started the app", Toast.LENGTH_SHORT).show();
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
@@ -83,9 +117,9 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case PERMISSION_REQUEST_READ_PHONE_STATE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission granted: " + PERMISSION_REQUEST_READ_PHONE_STATE, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Permission granted: " + PERMISSION_REQUEST_READ_PHONE_STATE, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Permission NOT granted: " + PERMISSION_REQUEST_READ_PHONE_STATE, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Permission NOT granted: " + PERMISSION_REQUEST_READ_PHONE_STATE, Toast.LENGTH_SHORT).show();
                 }
 
                 return;

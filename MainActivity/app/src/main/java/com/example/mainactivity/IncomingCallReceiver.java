@@ -26,18 +26,26 @@ public class IncomingCallReceiver extends BroadcastReceiver {
         ITelephony telephonyService;
 
         Bundle extras = intent.getExtras();
+        if (!MainActivity.on) {
+            return;
+        }
+
+        MainActivity.verified++;
+
 
         ArrayList<String> numbers = MainActivity.numbers;
         boolean skip = false;
         for (int i = 0; i < numbers.size(); i++) {
             if (numbers.get(i).equals(extras.getString("incoming_number"))) {
-                Toast.makeText(context, "Known Number", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "Known Number", Toast.LENGTH_LONG).show();
                 skip = true;
             }
         }
         if (skip) {
+            Log.v("c", "in contacts");
             return;
         }
+        Toast.makeText(context, "Possible Spam", Toast.LENGTH_LONG).show();
 
         if (extras != null) {
 
@@ -115,7 +123,6 @@ public class IncomingCallReceiver extends BroadcastReceiver {
             String number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
 
             if (state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING)) {
-
                 AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
                 MainActivity.lastRingerMode = audioManager.getRingerMode();
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -150,7 +157,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }*/
-                Toast.makeText(context, skip + "", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context,  "Number not in contacts", Toast.LENGTH_LONG).show();
 
                 if (skip) {
                     return;
@@ -159,7 +166,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                 if (CheckNum.checkNum("1" + extras.getString("incoming_number"))) {
                     Log.v("4", "" + MainActivity.lastRingerMode);
                     audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                    Toast.makeText(context, "Number Authenticated" + MainActivity.lastRingerMode, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(context, "Number Authenticated" + MainActivity.lastRingerMode, Toast.LENGTH_LONG).show();
                     audioManager.setRingerMode(MainActivity.lastRingerMode);
                     /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                         try {
