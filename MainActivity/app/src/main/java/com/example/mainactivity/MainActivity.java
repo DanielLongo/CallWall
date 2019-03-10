@@ -1,7 +1,6 @@
 package com.example.mainactivity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -10,12 +9,11 @@ import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.media.AudioManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,29 +25,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MainActivity.numbers = MainActivity.getContactList(this.getApplicationContext());
-        final Context context = this.getApplicationContext();
-
-        ContentObserver mObserver = new ContentObserver(new Handler()) {
-            @Override
-            public void onChange(boolean selfChange) {
-                super.onChange(selfChange);
-                MainActivity.numbers = MainActivity.getContactList(context);
-            }
-        };
-
-
-        this.getContentResolver().registerContentObserver(
-                ContactsContract.Contacts.CONTENT_URI, true, mObserver);
-
+        IncomingCallReceiver.thisActivity = MainActivity.this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final Context context = this.getApplicationContext();
 
         Toast.makeText(this, "Started the app", Toast.LENGTH_SHORT).show();
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS};
+                String[] permissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS, Manifest.permission.INTERNET};
                 requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE);
             }
             try {
@@ -64,10 +49,33 @@ public class MainActivity extends AppCompatActivity {
             }
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
                     != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 1);
+                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_READ_PHONE_STATE);
+            }
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.SYSTEM_ALERT_WINDOW)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW}, PERMISSION_REQUEST_READ_PHONE_STATE);
+            }
+
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.INTERNET)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.INTERNET}, PERMISSION_REQUEST_READ_PHONE_STATE);
             }
 
         }
+
+        MainActivity.numbers = MainActivity.getContactList(this.getApplicationContext());
+
+        ContentObserver mObserver = new ContentObserver(new Handler()) {
+            @Override
+            public void onChange(boolean selfChange) {
+                super.onChange(selfChange);
+                MainActivity.numbers = MainActivity.getContactList(context);
+            }
+        };
+
+
+        this.getContentResolver().registerContentObserver(
+                ContactsContract.Contacts.CONTENT_URI, true, mObserver);
     }
 
     @Override
