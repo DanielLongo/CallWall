@@ -22,4 +22,4 @@ auth_token = '67d7171a58c916ab3531e8a572aa24cc'
 		 	return "busy"
 	return "not busy"
 
-print(check_number_busy("+16505461126"))
+# print(check_number_busy("+16505461126"))
