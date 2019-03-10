@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 public class IncomingCallReceiver extends BroadcastReceiver {
     public static Activity thisActivity = null;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -30,7 +31,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
         boolean skip = false;
         for (int i = 0; i < numbers.size(); i++) {
             if (numbers.get(i).equals(extras.getString("incoming_number"))) {
-                Toast.makeText(context, "Spam", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Known Number", Toast.LENGTH_LONG).show();
                 skip = true;
             }
         }
@@ -68,7 +69,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
             if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
                 //increase the delay amount if problem occur something like -the screen didn't show up- that's the key about this method(the delay).
                 //callActionHandler.postDelayed(runRingingActivity, 10);
-                //Toast.makeText(context, "Possible Spam", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Possible Spam", Toast.LENGTH_LONG).show();
                 /*DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -117,6 +118,22 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 
                 AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
                 MainActivity.lastRingerMode = audioManager.getRingerMode();
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    try {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                        Toast.makeText(context, "Possible Spam", Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                        if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
+                            Intent intent2 = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                            context.startActivity(intent2);
+                        }
+                    }
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    //Toast.makeText(context, "Possible Spam", Toast.LENGTH_LONG).show();
+
+                }
 
                 /*TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 try {
@@ -138,7 +155,26 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                 if (skip) {
                     return;
                 }
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                Log.v("1", "" + extras.getString("incoming_number"));
+                if (CheckNum.checkNum("1" + extras.getString("incoming_number"))) {
+                    Log.v("4", "" + MainActivity.lastRingerMode);
+                    audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+                    Toast.makeText(context, "Number Authenticated" + MainActivity.lastRingerMode, Toast.LENGTH_LONG).show();
+                    audioManager.setRingerMode(MainActivity.lastRingerMode);
+                    /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        try {
+                            audioManager.setRingerMode(MainActivity.lastRingerMode);
+                        } catch (Exception e) {
+                            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                            if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
+                                Intent intent2 = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                                context.startActivity(intent2);
+                            }
+                        }
+                    } else {
+                        audioManager.setRingerMode(MainActivity.lastRingerMode);
+                    }*/
+                } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                     try {
                         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                         Toast.makeText(context, "Possible Spam", Toast.LENGTH_LONG).show();
@@ -153,24 +189,6 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     //Toast.makeText(context, "Possible Spam", Toast.LENGTH_LONG).show();
 
-                }
-                Log.v("1", ""+extras.getString("incoming_number"));
-                if (CheckNum.checkNum("1"+extras.getString("incoming_number"))) {
-                    Toast.makeText(context, "Pass"+MainActivity.lastRingerMode, Toast.LENGTH_LONG).show();
-                    audioManager.setRingerMode(MainActivity.lastRingerMode);
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                        try {
-                            audioManager.setRingerMode(MainActivity.lastRingerMode);
-                        } catch (Exception e) {
-                            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                            if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
-                                Intent intent2 = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                                context.startActivity(intent2);
-                            }
-                        }
-                    } else {
-                        audioManager.setRingerMode(MainActivity.lastRingerMode);
-                    }
                 }
 
                 //Toast.makeText(context, "Ring " + number, Toast.LENGTH_SHORT).show();
