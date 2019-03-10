@@ -1,10 +1,7 @@
 package com.example.mainactivity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.widget.TextView;
 
 public class CustomCallsReceiver extends Activity {
 
@@ -15,7 +12,7 @@ public class CustomCallsReceiver extends Activity {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.custome_calls_receiver);
+        /*setContentView(R.layout.custome_calls_receiver);
 
         TextView number = (TextView) findViewById(R.id.number);
         number.setGravity(Gravity.CENTER);
@@ -29,6 +26,24 @@ public class CustomCallsReceiver extends Activity {
         Intent startMain = new Intent(Intent.ACTION_MAIN);
         startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //this.getBaseContext().startActivity(startMain);
+        //this.getBaseContext().startActivity(startMain);*/
+
+        /*AlertDialog alertDialog = new AlertDialog.Builder(CustomCallsReceiver.this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage("Alert message to be shown");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();*/
+        /*NotificationCompat.Builder builder = new NotificationCompat.Builder(this, 0)
+                .setContentTitle("test")
+                .setContentText("hi")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);*/
+        throw new RuntimeException("This is a crash");
+
+
     }
 }
