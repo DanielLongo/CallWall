@@ -22,4 +22,4 @@ def check_number_busy(phone_number):
 		 	return "busy"
 	return "not busy"
 
-print(check_number_busy("+16505461126"))
+# print(check_number_busy("+16505461126"))
