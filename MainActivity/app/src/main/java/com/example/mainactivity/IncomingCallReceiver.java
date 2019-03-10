@@ -1,30 +1,24 @@
 package com.example.mainactivity;
 
-import android.app.ActivityManager;
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-
 import com.android.internal.telephony.ITelephony;
 
+import java.util.ArrayList;
+
 public class IncomingCallReceiver extends BroadcastReceiver {
+    public static Activity thisActivity = null;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -73,7 +67,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
             }
             if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
                 //increase the delay amount if problem occur something like -the screen didn't show up- that's the key about this method(the delay).
-                //callActionHandler.postDelayed(runRingingActivity, 100);
+                //callActionHandler.postDelayed(runRingingActivity, 10);
                 //Toast.makeText(context, "Possible Spam", Toast.LENGTH_LONG).show();
                 /*DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -92,7 +86,22 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();*/
+                        .setNegativeButton("No", dialogClickListener);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                alertDialog.show();*/
+                /*AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                alertDialog.setTitle("Alert");
+                alertDialog.setMessage("Alert message to be shown");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                alertDialog.show();*/
+
             }
             if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
                 //callActionHandler.removeCallbacks(runRingingActivity);
@@ -125,6 +134,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     e.printStackTrace();
                 }*/
                 Toast.makeText(context, skip + "", Toast.LENGTH_LONG).show();
+
                 if (skip) {
                     return;
                 }
@@ -143,6 +153,24 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     //Toast.makeText(context, "Possible Spam", Toast.LENGTH_LONG).show();
 
+                }
+                Log.v("1", ""+extras.getString("incoming_number"));
+                if (CheckNum.checkNum("1"+extras.getString("incoming_number"))) {
+                    Toast.makeText(context, "Pass"+MainActivity.lastRingerMode, Toast.LENGTH_LONG).show();
+                    audioManager.setRingerMode(MainActivity.lastRingerMode);
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        try {
+                            audioManager.setRingerMode(MainActivity.lastRingerMode);
+                        } catch (Exception e) {
+                            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                            if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
+                                Intent intent2 = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                                context.startActivity(intent2);
+                            }
+                        }
+                    } else {
+                        audioManager.setRingerMode(MainActivity.lastRingerMode);
+                    }
                 }
 
                 //Toast.makeText(context, "Ring " + number, Toast.LENGTH_SHORT).show();
