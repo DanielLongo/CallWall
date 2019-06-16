@@ -7,6 +7,7 @@ buildscript {
         
     }
     dependencies {
+        implementation 'com.twilio.sdk:twilio:jar:7.39.0'
         classpath 'com.android.tools.build:gradle:3.3.2'
         
         // NOTE: Do not place your application dependencies here; they belong
@@ -14,11 +15,18 @@ buildscript {
     }
 }
 
+android {
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+}
+
 allprojects {
     repositories {
         google()
         jcenter()
-        
+
     }
 }
 

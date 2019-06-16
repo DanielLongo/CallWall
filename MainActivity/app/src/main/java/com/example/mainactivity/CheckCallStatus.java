@@ -31,6 +31,8 @@ public class CheckCallStatus {
 
         @Override
         protected Void doInBackground(Void... params) {
+            Log.v("num", turl);
+            Log.v("num2", turl2);
             URL url = null;
             try {
                 url = new URL(turl);
@@ -53,8 +55,10 @@ public class CheckCallStatus {
             encoding = encoding == null ? "UTF-8" : encoding;
             try {
                 turl = IOUtils.toString(in, encoding);
+                Log.v("6", turl);
             } catch (IOException e) {
                 turl = "true";
+                Log.v("6", "t");
                 e.printStackTrace();
             }
 
@@ -93,16 +97,23 @@ public class CheckCallStatus {
         task.turl2 = generateURL(phoneNum);
         page = task.tpage;
         task.execute();
-        try {
-            Thread.sleep(12000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         boolean a = false;
         boolean b = false;
-        body = task.turl;//IOUtils.toString(in, encoding);
-        if (body.equals("False")) a = false;
-        else a = true;
+        int attempts = 0;
+        //while (a == false && attempts < 20) {
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            body = task.turl;//IOUtils.toString(in, encoding);
+        System.out.println(body);
+            if (body.equals("False")) a = false;
+            else a = true;
+            Log.v("6", body);
+            //attempts++;
+        //}
+
         try {
             HtmlElement spanPrice = ((HtmlElement) page.getFirstByXPath("//*[@id=\"NNForm\"]/div[4]/div[1]/div/div/div/div[2]/div[1]/div[2]"));
             String rating = spanPrice.asText();

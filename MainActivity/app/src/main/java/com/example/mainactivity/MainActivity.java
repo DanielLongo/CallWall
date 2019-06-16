@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     public static int lastRingerMode = 0;
     public static ArrayList<String> numbers;
     public static boolean on = true;
-    public static int verified = 0;
+    public static int verified = 2;
     public void updateTextView(final String s) {
         MainActivity.this.runOnUiThread(new Runnable() {
             @Override

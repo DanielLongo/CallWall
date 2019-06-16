@@ -167,7 +167,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     Log.v("4", "" + MainActivity.lastRingerMode);
                     audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
                     //Toast.makeText(context, "Number Authenticated" + MainActivity.lastRingerMode, Toast.LENGTH_LONG).show();
-                    audioManager.setRingerMode(MainActivity.lastRingerMode);
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL/*MainActivity.lastRingerMode*/);
                     /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                         try {
                             audioManager.setRingerMode(MainActivity.lastRingerMode);
@@ -206,7 +206,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
             }
             if (state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_IDLE)) {
                 AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                audioManager.setRingerMode(MainActivity.lastRingerMode);
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL/*MainActivity.lastRingerMode*/);
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                     try {
                         audioManager.setRingerMode(MainActivity.lastRingerMode);
@@ -218,7 +218,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                         }
                     }
                 } else {
-                    audioManager.setRingerMode(MainActivity.lastRingerMode);
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL/*MainActivity.lastRingerMode*/);
                 }
             }
 
