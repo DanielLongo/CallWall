@@ -71,7 +71,7 @@
     <TextView
         android:id="@+id/verified"
         android:layout_width="148dp"
-        android:layout_height="26dp"
+        android:layout_height="23dp"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="596dp"
