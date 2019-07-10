@@ -62,7 +62,7 @@ def submitForm(phone_num_input, email_input):
 		False
 	return False
 #
-***REMOVED***
+if __name__ == "__main__":
 	# app.run(host="0.0.0.0", port=8080)
 	the_phone_num_input = '4154567890'
 	the_email_input = 'something1234@gmail.com'
