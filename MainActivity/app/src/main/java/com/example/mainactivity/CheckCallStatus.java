@@ -7,8 +7,6 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -53,14 +51,14 @@ public class CheckCallStatus {
             }
             String encoding = con.getContentEncoding();
             encoding = encoding == null ? "UTF-8" : encoding;
-            try {
-                turl = IOUtils.toString(in, encoding);
+            //try {
+                //turl = IOUtils.toString(in, encoding);
                 Log.v("6", turl);
-            } catch (IOException e) {
+            //} catch (IOException e) {
                 turl = "true";
-                Log.v("6", "t");
-                e.printStackTrace();
-            }
+                //Log.v("6", "t");
+                //e.printStackTrace();
+            //}
 
             WebClient client = new WebClient();
             client.setJavaScriptEnabled (false);

@@ -19,6 +19,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Call;
+
+import java.net.URI;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,12 +31,16 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<String> numbers;
     public static boolean on = true;
     public static int verified = 2;
+
+    public static final String ACCOUNT_SID = "AC6f773e33d173baceaddd67ddc7f3d124";
+    public static final String AUTH_TOKEN = "x";
+
     public void updateTextView(final String s) {
         MainActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                TextView tv= (TextView) findViewById(R.id.verified);
-                tv.setText(""+s);
+                TextView tv = (TextView) findViewById(R.id.verified);
+                tv.setText("" + s);
             }
         });
     }
@@ -47,19 +55,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Call call = Call.creator(
+                new com.twilio.type.PhoneNumber("+16505541750"),//to
+                new com.twilio.type.PhoneNumber("+15017122661"),//from
+                URI.create("http://demo.twilio.com/docs/voice.xml"))
+                .create();
+
+        Log.v("asdf", call.getSid());
+
         class VerifiedCounter extends BroadcastReceiver {
             @Override
             public void onReceive(final Context context, Intent intent) {
                 if (!MainActivity.on) {
                     return;
                 }
-                Log.v("test", ""+MainActivity.verified);
-                updateTextView(MainActivity.verified+"");
+                Log.v("test", "" + MainActivity.verified);
+                updateTextView(MainActivity.verified + "");
             }
         }
 
         new VerifiedCounter();
-
 
 
         final Context context = this.getApplicationContext();

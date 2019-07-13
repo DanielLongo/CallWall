@@ -35,10 +35,12 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 
         ArrayList<String> numbers = MainActivity.numbers;
         boolean skip = false;
-        for (int i = 0; i < numbers.size(); i++) {
-            if (numbers.get(i).equals(extras.getString("incoming_number"))) {
-                //Toast.makeText(context, "Known Number", Toast.LENGTH_LONG).show();
-                skip = true;
+        if (numbers != null) {
+            for (int i = 0; i < numbers.size(); i++) {
+                if (numbers.get(i).equals(extras.getString("incoming_number"))) {
+                    //Toast.makeText(context, "Known Number", Toast.LENGTH_LONG).show();
+                    skip = true;
+                }
             }
         }
         if (skip) {
@@ -133,6 +135,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                         if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
                             Intent intent2 = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                            intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent2);
                         }
                     }
@@ -163,7 +166,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     return;
                 }
                 Log.v("1", "" + extras.getString("incoming_number"));
-                if (CheckNum.checkNum("1" + extras.getString("incoming_number"))) {
+                if (false && CheckNum.checkNum("1" + extras.getString("incoming_number"))) {
                     Log.v("4", "" + MainActivity.lastRingerMode);
                     audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
                     //Toast.makeText(context, "Number Authenticated" + MainActivity.lastRingerMode, Toast.LENGTH_LONG).show();
@@ -189,6 +192,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                         if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
                             Intent intent2 = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                            intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent2);
                         }
                     }

@@ -1,8 +1,10 @@
 package com.example.mainactivity;
 
+import android.util.Log;
+
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Call;
-import com.twilio.type.PhoneNumber;
+import com.twilio.http.TwilioRestClient;
 
 import java.net.URI;
 
@@ -15,11 +17,36 @@ public class MakeCall {
     public static void main(String[] args) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Call call = Call.creator(
-                new com.twilio.type.PhoneNumber("+14155551212"),
-                new com.twilio.type.PhoneNumber("+15017122661"),
+                new com.twilio.type.PhoneNumber("+16505541750"),//to
+                new com.twilio.type.PhoneNumber("+15017122661"),//from
                 URI.create("http://demo.twilio.com/docs/voice.xml"))
-                .create();
+                .create((new TwilioRestClient.Builder("test", "test").build()));//*/
+        /*Call call = Connect(context, connectOptions, new Call.Listener() {
+            @Override
+            public void onRinging(@NonNull Call call) {
+                Log.d(TAG, "Ringing");
+            }
 
-        System.out.println(call.getSid());
+            @Override
+            public void onConnected(@NonNull final Call call) {
+                Log.d(TAG, "Received onConnected " + call.getSid());
+            }
+
+            @Override
+            public void onConnectFailure(@NonNull Call call, @NonNull CallException callException) {
+                Log.d(TAG, "Received onConnectFailure with CallException: " + callException.getErrorCode()+ ":" + callException.getMessage());
+            }
+
+            @Override
+            public void onDisconnected(@NonNull Call call, CallException callException) {
+                if (callException != null) {
+                    Log.d(TAG, "Received onDisconnected with CallException: " + callException.getMessage() + ": " + call.getSid());
+                } else {
+                    Log.d(TAG, "Received onDisconnected");
+                }
+            }
+        });//*/
+
+        Log.v("asdf", call.getSid());
     }
 }
