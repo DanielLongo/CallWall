@@ -19,10 +19,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Call;
-
-import java.net.URI;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,15 +50,6 @@ public class MainActivity extends AppCompatActivity {
         IncomingCallReceiver.thisActivity = MainActivity.this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-        Call call = Call.creator(
-                new com.twilio.type.PhoneNumber("+16505541750"),//to
-                new com.twilio.type.PhoneNumber("+15017122661"),//from
-                URI.create("http://demo.twilio.com/docs/voice.xml"))
-                .create();
-
-        Log.v("asdf", call.getSid());
 
         class VerifiedCounter extends BroadcastReceiver {
             @Override

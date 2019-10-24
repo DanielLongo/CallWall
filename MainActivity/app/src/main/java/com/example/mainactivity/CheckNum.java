@@ -10,7 +10,7 @@ public class CheckNum {
         //boolean a = CheckPhoneNum.checkPhoneNum (number);
         //Log.v("1", ""+a);
         Log.v("2", ""+b);
-        if (true && b) return true;
+        if (b) return true;
         return false;
     }
 

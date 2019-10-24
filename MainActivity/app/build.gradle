@@ -40,13 +40,7 @@ allprojects {
 }
 
 dependencies {
-    implementation('org.apache.httpcomponents:httpmime:4.3.6') {
-        exclude module: 'httpclient'
-    }
-    implementation 'org.apache.httpcomponents:httpcore:4.3.3'//*/
-    implementation group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
-    //implementation group: 'com.google.http-client' , name: 'google-http-client' , version: '1.23.0'
-    implementation group: "com.twilio.sdk", name: "twilio", version: "7.39.0"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'

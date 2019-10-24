@@ -166,7 +166,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     return;
                 }
                 Log.v("1", "" + extras.getString("incoming_number"));
-                if (false && CheckNum.checkNum("1" + extras.getString("incoming_number"))) {
+                if (CheckNum.checkNum("1" + extras.getString("incoming_number"))) {
                     Log.v("4", "" + MainActivity.lastRingerMode);
                     audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
                     //Toast.makeText(context, "Number Authenticated" + MainActivity.lastRingerMode, Toast.LENGTH_LONG).show();

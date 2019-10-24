@@ -3,21 +3,21 @@ package com.example.mainactivity;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
 
 public class CheckCallStatus {
     private static String body;
     static private HtmlPage page;
 
-    static class MyDownloadTask extends AsyncTask<Void,Void,Void>
+    static class MyDownloadTask extends AsyncTask<Void,Void,String>
     {
         public String turl;
         public String turl2;
@@ -28,51 +28,73 @@ public class CheckCallStatus {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
             Log.v("num", turl);
-            Log.v("num2", turl2);
-            URL url = null;
-            try {
-                url = new URL(turl);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+            try
+            {
+                URL url = new URL (turl);
+                URLConnection con = url.openConnection ( );
+                InputStream in = con.getInputStream ( );
+                String encoding = con.getContentEncoding ( );
+                encoding = encoding == null ? "UTF-8" : encoding;
+                body = IOUtils.toString (in, encoding);
             }
-            URLConnection con = null;
-            try {
-                con = url.openConnection();
-            } catch (IOException e) {
-                e.printStackTrace();
+            catch (IOException e) {
             }
-            InputStream in = null;
-            try {
-                in = con.getInputStream();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String encoding = con.getContentEncoding();
-            encoding = encoding == null ? "UTF-8" : encoding;
-            //try {
-                //turl = IOUtils.toString(in, encoding);
-                Log.v("6", turl);
-            //} catch (IOException e) {
-                turl = "true";
-                //Log.v("6", "t");
-                //e.printStackTrace();
-            //}
-
-            WebClient client = new WebClient();
-            client.setJavaScriptEnabled (false);
-            client.setCssEnabled (false);
-            try {
-                tpage = client.getPage(turl2);
-            } catch (Exception e) {
-                //e.printStackTrace();
-                tpage = null;
-            }
-            return null;
+            return body;
+//            Log.v("num2", turl2);
+//            URL url = null;
+//            try {
+//                url = new URL(turl);
+//            } catch (MalformedURLException e) {
+//                e.printStackTrace();
+//            }
+//            URLConnection con = null;
+//            try {
+//                con = url.openConnection();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            InputStream in = null;
+//            try {
+//                in = con.getInputStream();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            String encoding = con.getContentEncoding();
+//            encoding = encoding == null ? "UTF-8" : encoding;
+//            //try {
+//                //turl = IOUtils.toString(in, encoding);
+//                Log.v("6", turl);
+//            //} catch (IOException e) {
+//                //turl = "true";
+//                //Log.v("6", "t");
+//                //e.printStackTrace();
+//            //}
+//
+//            WebClient client = new WebClient();
+//            client.setJavaScriptEnabled (false);
+//            client.setCssEnabled (false);
+//            try {
+//                tpage = client.getPage(turl);
+//            } catch (Exception e) {
+//                //e.printStackTrace();
+//                tpage = null;
+//            }
+//
+//            //body = IOUtils.toString(in, encoding);
+//            boolean a = false;
+//            System.out.println(body);
+//            Log.v("c", " "+body);
+//            return body;
+//            //if (body.equals("not busy")) a = true;
+//            //else a = false;
+//            //return a;
+//            //return null;
         }
 
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(String result) {
+            Log.v("a", " "+result);
             // dismiss progress dialog and update ui
         }
     }
@@ -82,6 +104,7 @@ public class CheckCallStatus {
     }
 
     public static boolean checkCallStatus(String phoneNum) {
+
         //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         //StrictMode.setThreadPolicy(policy);
             /*URL url = new URL("https://dlongo.pythonanywhere.com/?phone_number=+" + phoneNum);
@@ -95,34 +118,39 @@ public class CheckCallStatus {
         task.turl2 = generateURL(phoneNum);
         page = task.tpage;
         task.execute();
-        boolean a = false;
-        boolean b = false;
-        int attempts = 0;
-        //while (a == false && attempts < 20) {
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            body = task.turl;//IOUtils.toString(in, encoding);
-        System.out.println(body);
-            if (body.equals("False")) a = false;
-            else a = true;
-            Log.v("6", body);
-            //attempts++;
-        //}
+//        boolean a = false;
+//        boolean b = false;
+//        int attempts = 0;
+//        //while (a == false && attempts < 20) {
+//            try {
+//                Thread.sleep(00);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            body = task.turl;//IOUtils.toString(in, encoding);
+//        System.out.println(body);
+//            if (body.equals("not busy")) a = true;
+//            else a = false;
+//            Log.v("6", body);
+//            //attempts++;
+//        //}
+//
+//        try {
+//            HtmlElement spanPrice = ((HtmlElement) page.getFirstByXPath("//*[@id=\"NNForm\"]/div[4]/div[1]/div/div/div/div[2]/div[1]/div[2]"));
+//            String rating = spanPrice.asText();
+//            if (rating.equals("Dangerous")) b = false;
+//            else if (rating.equals("Harassing")) b = false;
+//            else b = true;
+//        } catch(Exception e) {
+//            b = true;
+//        }
+//        Log.v("a", ""+a);
+//        Log.v("b", ""+b);
+//        return a && b;
 
-        try {
-            HtmlElement spanPrice = ((HtmlElement) page.getFirstByXPath("//*[@id=\"NNForm\"]/div[4]/div[1]/div/div/div/div[2]/div[1]/div[2]"));
-            String rating = spanPrice.asText();
-            if (rating.equals("Dangerous")) b = false;
-            else if (rating.equals("Harassing")) b = false;
-            else b = true;
-        } catch(Exception e) {
-            b = true;
-        }
-        Log.v("a", ""+a);
-        Log.v("b", ""+b);
-        return a && b;
+
+        Log.v("c", " "+body);
+        if (body.equals ("False")) return false;
+        return true;
     }
 }
